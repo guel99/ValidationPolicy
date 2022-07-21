@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://uri.etsi.org/19172/v1.1.1#" xmlns:tsl="http://uri.etsi.org/02231/v2#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://uri.etsi.org/19172/v1.1.1#" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:import namespace="http://uri.etsi.org/02231/v2#" schemaLocation="https://uri.etsi.org/02231/v3.1.2/ts_102231v030102_xsd.xsd"/>
+    <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
+    <xs:complexType name="AnyType" mixed="true">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:any namespace="##any" processContents="lax"/>
+        </xs:sequence>
+        <xs:anyAttribute namespace="##any"/>
+    </xs:complexType>
+    <xs:element name="SignaturePolicy" type="SignaturePolicyType"/>
+    <xs:complexType name="SignaturePolicyType">
+        <xs:sequence>
+            <xs:element ref="Digest"/>
+            <xs:element ref="PolicyComponents"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Digest" type="DigestDetailsType"/>
+    <xs:complexType name="DigestDetailsType">
+        <xs:sequence>
+            <xs:element ref="ds:DigestMethod"/>
+            <xs:element ref="ds:DigestValue"/>
+            <xs:element ref="ds:CanonicalizationMethod"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PolicyComponents" type="PolicyComponentsType"/>
+    <xs:complexType name="PolicyComponentsType">
+        <xs:sequence>
+            <xs:element ref="GeneralDetails"/>
+            <xs:element ref="PolicyRules"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="GeneralDetails" type="GeneralDetailsType"/>
+    <xs:complexType name="GeneralDetailsType">
+        <xs:sequence>
+            <xs:element ref="SigPolicyDetails"/>
+            <xs:element ref="AuthorityDetails" minOccurs="0"/>
+            <xs:element ref="OtherDetails" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="SigPolicyDetails" type="SigPolicyDetailsType"/>
+    <xs:complexType name="SigPolicyDetailsType">
+        <xs:sequence>
+            <xs:element name="PolicyIdentifier" type="xs:anyURI"/>
+            <xs:element name="PolicyName" type="tsl:InternationalNamesType"/>
+            <xs:element ref="tsl:DistributionPoints" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="AuthorityDetails" type="AuthorityDetailsType"/>
+    <xs:complexType name="AuthorityDetailsType">
+        <xs:sequence>
+            <xs:element ref="Name" minOccurs="0"/>
+            <xs:element ref="TradeName" minOccurs="0"/>
+            <xs:element ref="PostalAddresses"/>
+            <xs:element ref="ElectronicAddresses"/>
+            <xs:element ref="ContactPersons" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Name" type="tsl:InternationalNamesType"/>
+    <xs:element name="TradeName" type="tsl:InternationalNamesType"/>
+    <xs:element name="PostalAddresses" type="tsl:PostalAddressListType"/>
+    <xs:element name="ElectronicAddresses" type="tsl:ElectronicAddressType"/>
+    <xs:element name="ContactPersons" type="ContactPersonsListType"/>
+    <xs:complexType name="ContactPersonsListType">
+        <xs:sequence>
+            <xs:element ref="ContactPerson" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ContactPerson" type="ContactPersonType"/>
+    <xs:complexType name="ContactPersonType">
+        <xs:sequence>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element ref="ElectronicAddresses"/>
+            <xs:element name="PhoneNumbers" type="StringListType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="StringListType">
+        <xs:list itemType="xs:string"/>
+    </xs:simpleType>
+    <xs:element name="OtherDetails" type="OtherDetailsType"/>
+    <xs:complexType name="OtherDetailsType">
+        <xs:sequence>
+            <xs:element name="DateOfIssue" type="xs:dateTime"/>
+            <xs:element name="SigningPeriod" type="TimePeriodType" minOccurs="0"/>
+            <xs:element name="Other" type="AnyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TimePeriodType">
+        <xs:sequence>
+            <xs:element name="NotBefore" type="xs:dateTime"/>
+            <xs:element name="NotAfter" type="xs:dateTime" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="PolicyRules" type="PolicyRulesListType"/>
+    <xs:complexType name="PolicyRulesListType">
+        <xs:sequence>
+            <xs:element ref="PolicyRule" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PolicyRule" type="PolicyRuleType"/>
+    <xs:group name="BasicRule">
+        <xs:choice>
+            <xs:element ref="DataToBeSignedRules"/>
+            <xs:element ref="SigToDTBSRelationRules"/>
+            <xs:element ref="SigFormatsAndLevels"/>
+            <xs:element ref="AugmentationRules"/>
+            <xs:element ref="SigningCertRules"/>
+            <xs:element ref="TimeEvidencesRules"/>
+            <xs:element ref="SignerAttributesConstraints"/>
+            <xs:element ref="QualifyingPropertiesRules"/>
+            <xs:element ref="SCDLoARules"/>
+            <xs:element ref="CryptoSuitesRules"/>
+            <xs:element ref="OtherRule" />
+        </xs:choice>
+    </xs:group>
+    <xs:element name="OtherRule" type="AnyType"/>
+    <xs:complexType name="PolicyRuleType">
+        <xs:choice>
+            <xs:element ref="CommitmentRules"/>
+            <xs:group ref="BasicRule"/>
+        </xs:choice>
+        <xs:attribute name="RecommendedScope" type="ScopeListType" use="optional"/>
+    </xs:complexType>
+    <xs:simpleType name="ScopeListType">
+        <xs:list itemType="ScopeType"/>
+    </xs:simpleType>
+    <xs:simpleType name="ScopeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Generation">
+                <xs:annotation>
+                    <xs:documentation>The rule applies for signature generation</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Validation">
+                <xs:annotation>
+                    <xs:documentation>The rule applies for signature validation</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Augmentation">
+                <xs:annotation>
+                    <xs:documentation>The rule applies for signature augmentation</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="CommitmentRules" type="CommitmentRulesType"/>
+    <xs:complexType name="CommitmentRulesType">
+        <xs:sequence>
+            <xs:element ref="ComitmentRulesComponent" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ComitmentRulesComponent" type="CommitmentRulesComponentType"/>
+    <xs:complexType name="CommitmentRulesComponentType">
+        <xs:sequence>
+            <xs:element ref="Commitment" maxOccurs="unbounded"/>
+            <xs:sequence>
+                <xs:group ref="BasicRule" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:sequence>
+        <xs:attribute name="MatchingIndicator" type="MatchingIndicatorType" use="required"/>
+    </xs:complexType>
+    <xs:element name="Commitment" type="CommitmentDetailsType"/>
+    <xs:complexType name="CommitmentDetailsType">
+        <xs:sequence>
+            <xs:element name="Identifier" type="xs:anyURI"/>
+            <xs:element name="Details" type="tsl:MultiLangStringType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="MatchingIndicatorType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="All"/>
+            <xs:enumeration value="None"/>
+            <xs:enumeration value="AtLeastOne"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="DataToBeSignedRules" type="DataToBeSignedRulesType"/>
+    <xs:complexType name="DataToBeSignedRulesType">
+        <xs:sequence>
+            <xs:element name="AnyOfMimeType" type="StringListType" minOccurs="0"/>
+            <xs:element name="NoneOfMimeType" type="StringListType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="SigToDTBSRelationRules" type="SigToDTBSRelationRulesType"/>
+    <xs:complexType name="SigToDTBSRelationRulesType">
+        <xs:sequence>
+            <xs:element ref="DTBSCardinality"/>
+            <xs:element ref="SigDTBSRelativePosition" minOccurs="0"/>
+            <xs:element ref="SigFormatsAndLevels" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="DTBSCardinality" type="CardinalityType"/>
+    <xs:complexType name="CardinalityType">
+        <xs:sequence>
+            <xs:element name="MaximumValue" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:int">
+                            <xs:attribute name="qualifier" type="MaxValueQualEnumeratedType" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="MinimumValue" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:int">
+                            <xs:attribute name="qualifier" type="MinValueQualEnumeratedType" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="MaxValueQualEnumeratedType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="LessThan"/>
+            <xs:enumeration value="LessOrEqualTo"/>
+            <xs:enumeration value="Equal"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MinValueQualEnumeratedType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HigherThan"/>
+            <xs:enumeration value="HigherOrEqualTo"/>
+            <xs:enumeration value="Equal"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="SigDTBSRelativePosition" type="SigDTBSRelativePositionType"/>
+    <xs:simpleType name="SigDTBSRelativePositionType">
+        <xs:list itemType="RelativePositionValuesType"/>
+    </xs:simpleType>
+    <xs:simpleType name="RelativePositionValuesType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="EnvelopingSig"/>
+            <xs:enumeration value="EnvelopedSig"/>
+            <xs:enumeration value="DetachedSig"/>
+            <xs:enumeration value="ASiC"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="SigFormatsAndLevels" type="SigFormatsAndLevelsType"/>
+    <xs:complexType name="SigFormatsAndLevelsType">
+        <xs:sequence>
+            <xs:element ref="SigFormats" minOccurs="0" />
+            <xs:element ref="SigLevels" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="SigFormats" type="SigFormatsType"/>
+    <xs:complexType name="SigFormatsType">
+        <xs:sequence>
+            <xs:element name="Format" type="xs:anyURI" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="SigLevels" type="SigLevelsType"/>
+    <xs:complexType name="SigLevelsType">
+        <xs:sequence>
+            <xs:element name="SigLevel" type="xs:anyURI"  maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="AugmentationRules" type="AugmentationRulesType"/>
+    <xs:complexType name="AugmentationRulesType">
+        <xs:sequence>
+            <xs:element name="PreviousValidationRequired" type="xs:boolean"/>
+            <xs:element name="LevelId">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:anyURI">
+                            <xs:attribute name="Qualifier">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="ThisLevel"/>
+                                        <xs:enumeration value="MinimumLevel"/>
+                                        <xs:enumeration value="MaximumLevel"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="TrustAnchors" type="TrustAnchorListType"/>
+    <xs:complexType name="TrustAnchorListType">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:choice>
+                <xs:element ref="X509CertificateBased" />
+                <xs:element ref="TAsInTrustedList" />
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name ="X509CertificateBased" type="Base64BinaryAndTimeType"/>
+    <xs:complexType name="Base64BinaryAndTimeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:base64Binary">
+                <xs:attribute name="reliableUntil" type="xs:dateTime" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name ="TAsInTrustedList" type="TrustAnchorsInTLType"/>
+    <xs:complexType name="TrustAnchorsInTLType">
+        <xs:sequence>
+            <xs:element name="TLReference" type="xs:anyURI"/>
+            <xs:element name="ServiceTypes" type="tsl:NonEmptyURIListType" minOccurs="0"/>
+            <xs:element name="ServiceStatuses" type="tsl:NonEmptyURIListType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="reliableUntil" type="xs:dateTime" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="NameConstraintsType">
+        <xs:sequence>
+            <xs:element ref="PermittedSubtrees" minOccurs="0"/>
+            <xs:element ref="ExcludedSubtrees" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PermittedSubtrees" type="GeneralSubTreesListType"/>
+    <xs:element name="ExcludedSubtrees" type="GeneralSubTreesListType"/>
+    <xs:complexType name="GeneralSubTreesListType">
+        <xs:sequence>
+            <xs:element ref="GeneralSubTree" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="GeneralSubTree" type="GeneralSubTreeType"/>
+    <xs:complexType name="GeneralSubTreeType">
+        <xs:sequence>
+            <xs:element name="Base" type="xs:base64Binary"/>
+            <xs:element name="Minimum" type="xs:integer" default="0"/>
+            <xs:element name="Maximum" type="xs:integer" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PolicyConstraintsType">
+        <xs:sequence>
+            <xs:element name="RequireExplicitPolicy" type="xs:integer" minOccurs="0"/>
+            <xs:element name="InhibitExplicitPolicy" type="xs:integer" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CertificateTrustTreesType">
+        <xs:sequence>
+            <xs:element ref="CertificateTrustPoint" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="CertificateTrustPoint" type="CertificateTrustPointType"/>
+    <xs:complexType name="CertificateTrustPointType">
+        <xs:sequence>
+            <xs:element ref="TrustAnchors"/>
+            <xs:element name="PathLenConstraint" type="xs:integer" minOccurs="0"/>
+            <xs:element name="AcceptablePolicySet" type="AcceptablePoliciesListType" minOccurs="0"/>
+            <xs:element name="NameConstraints" type="NameConstraintsType" minOccurs="0"/>
+            <xs:element name="PolicyConstraints" type="PolicyConstraintsType" minOccurs="0"/>
+            <xs:element ref="UseCertPath" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AcceptablePoliciesListType">
+        <xs:sequence>
+            <xs:element name="AcceptablePolicy" type="xs:anyURI" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UseCertPath">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element name="AsInSignature"/>
+                <xs:sequence>
+                    <xs:element name="X509Certificate" type="xs:base64Binary"  maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CertificateRevReq" type="CertificateRevReqType"/>
+    <xs:complexType name="CertificateRevReqType">
+        <xs:sequence>
+            <xs:element name="EndRevReq" type="RevocationReqType"/>
+            <xs:element name="CACerts" type="RevocationReqType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="RevocationReqType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="clrcheck"/>
+            <xs:enumeration value="ocspcheck"/>
+            <xs:enumeration value="bothcheck"/>
+            <xs:enumeration value="eithercheck"/>
+            <xs:enumeration value="nocheck"/>
+            <xs:enumeration value="other"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="CertificateRevTrustType">
+        <xs:sequence>
+            <xs:element ref="CertificateRevReq"/>
+            <xs:element name="Freshness" minOccurs="0">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="MaxDifferenceRevocationAndValidation" type="xs:duration"/>
+                        <xs:element name="TimeAfterSignature" type="xs:duration"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SigCertIssuedByCAKeepsExpiredRevokedCertsInfo" type="xs:duration" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="SigningCertRules" type="SigningCertRulesType"/>
+    <xs:complexType name="SigningCertRulesType">
+        <xs:sequence>
+            <xs:element ref="MandatedSigningCertInfo" minOccurs="0"/>
+            <xs:element ref="SigningCertTrustConditions"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="MandatedSigningCertInfo">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="signingCertOnly"/>
+                <xs:enumeration value="fullPath"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="SigningCertTrustConditions" type="SigningCertTrustConditionsType"/>
+    <xs:complexType name="SigningCertTrustConditionsType">
+        <xs:sequence>
+            <xs:element name="SignerTrustTrees" type="CertificateTrustTreesType"/>
+            <xs:element name="SignerRevTrust" type="CertificateRevTrustType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="TimeEvidencesRules" type="TimeEvidencesRulesType"/>
+    <xs:complexType name="TimeEvidencesRulesType">
+        <xs:sequence>
+            <xs:element ref="RulesForSetOfEvidences" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="RulesForSetOfEvidences" type="RulesForSetOfEvidencesType"/>
+    <xs:complexType name="RulesForSetOfEvidencesType">
+        <xs:sequence>
+            <xs:element name="EvidenceIdentifiers">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Identifier" type="xs:anyURI" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LevelOfAssurance" type="xs:anyURI"/>
+            <xs:element ref="TimeStampTrustCondition" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="TimeStampTrustCondition" type="TimeStampTrustConditionType"/>
+    <xs:complexType name="TimeStampTrustConditionType">
+        <xs:sequence>
+            <xs:element name="TstCertificateTrustTrees" type="CertificateTrustTreesType" minOccurs="0"/>
+            <xs:element name="TstRevocationTrust" type="CertificateRevTrustType" minOccurs="0"/>
+            <xs:element name="TstNameConstraints" type="NameConstraintsType" minOccurs="0"/>
+            <xs:element name="SignatureTimeStampDelay" type="DeltaTimeType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DeltaTimeType">
+        <xs:sequence>
+            <xs:element name="DeltaSeconds" type="xs:integer"/>
+            <xs:element name="DeltaMinutes" type="xs:integer"/>
+            <xs:element name="DeltaHours" type="xs:integer"/>
+            <xs:element name="DeltaDays" type="xs:integer"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="SignerAttributesConstraints" type="SignerAttributesConstraintsType"/>
+    <xs:complexType name="SignerAttributesConstraintsType">
+        <xs:choice>
+            <xs:element name="NoSignerAttributesAllowed"/>
+            <xs:element name="ConstraintsOnOneSetOfAttributes" type="AttributesSetConstraintsType" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="AttributesSetConstraintsType">
+        <xs:sequence>
+            <xs:element name="HowCertAttribute" type="HowCertAttributeType"/>
+            <xs:element name="AttrCertTrustTrees" type="CertificateTrustTreesType" minOccurs="0"/>
+            <xs:element name="AttributeRevocationTrust" type="CertificateRevTrustType" minOccurs="0"/>
+            <xs:element name="AttributeConstraints" type="AttributeConstraintsType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="HowCertAttributeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ClaimedAttribute"/>
+            <xs:enumeration value="CertifiedAttribute"/>
+            <xs:enumeration value="SignedAssertion"/>
+            <xs:enumeration value="Any"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="AttributeConstraintsType">
+        <xs:sequence>
+            <xs:element name="AttributeIdMustBePresent" type="xs:anyURI"/>
+            <xs:element name="AttributeValueConstraint" type="AnyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="QualifyingPropertiesRules" type="QualifyingPropertiesRulesType"/>
+    <xs:complexType name="QualifyingPropertiesRulesType">
+        <xs:sequence>
+            <xs:element name="LevelRules" type="LevelQualifyingPropertiesRulesType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="LevelQualifyingPropertiesRulesType">
+        <xs:sequence>
+            <xs:element name="LevelIdentifier" type="xs:anyURI" minOccurs="0"/>
+            <xs:element name="SignedQualifyingProperties" type="QualifyingPropertiesListType" minOccurs="0"/>
+            <xs:element name="UnsignedQualifyingProperties" type="QualifyingPropertiesListType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="QualifyingPropertiesListType">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:choice>
+                <xs:element name="Choice">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="PropertyId" type="xs:anyURI" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="presenceLevel" type="PresenceLevelType" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:sequence>
+                    <xs:element name="PropertyId" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:anyURI">
+                                    <xs:attribute name="presenceLevel" type="PresenceLevelType" use="required"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="PresenceLevelType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Mandatory"/>
+            <xs:enumeration value="Optional"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="SCDLoARules" type="xs:anyURI"/>
+    <xs:element name="CryptoSuitesRules" type="CryptoSuiteRulesType"/>
+    <xs:complexType name="CryptoSuiteRulesType">
+        <xs:sequence>
+            <xs:element name="AlgConstraints" type="AlgConstraintsType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AlgConstraintsType">
+        <xs:sequence>
+            <xs:element name="AlgId" type="xs:anyURI"/>
+            <xs:element name="Usages" type="UsagesType" minOccurs="0"/>
+            <xs:element name="ExpirationDate" type="xs:dateTime" />
+            <xs:element name="MinKeyLength" type="xs:integer" minOccurs="0"/>
+            <xs:element name="MinHashLength" type="xs:integer" minOccurs="0"/>
+            <xs:element name="Other" type="AnyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="UsagesType">
+        <xs:list itemType="UsageType"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="UsageType">
+        <xs:restriction base="xs:anyURI">
+            <xs:enumeration value="http://uri.etsi.org/19172/v1.1.1/Usage#Signature">
+                <xs:annotation>
+                    <xs:documentation>Constraints for algorithms used for generating the digital signature</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="http://uri.etsi.org/19172/v1.1.1/Usage/#SigningCert">
+                <xs:annotation>
+                    <xs:documentation>Constraints for algorithms used for generating the signing certificate</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="http://uri.etsi.org/19172/v1.1.1/Usage#PathCert">
+                <xs:annotation>
+                    <xs:documentation>Constraints for algorithms used for generating certificates in certification paths</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="http://uri.etsi.org/19172/v1.1.1/Usage#RevStatData">
+                <xs:annotation>
+                    <xs:documentation>Constraints for algorithms used for generating revocation status data</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="http://uri.etsi.org/19172/v1.1.1/Usage#Tstk">
+                <xs:annotation>
+                    <xs:documentation>Constraints for algorithms used for generating time-stamp tokens</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="http://uri.etsi.org/19172/v1.1.1/Usage#AaCert">
+                <xs:annotation>
+                    <xs:documentation>Constraints for algorithms used for generating attribute certificates</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="http://uri.etsi.org/19172/v1.1.1/Usage#SigAss">
+                <xs:annotation>
+                    <xs:documentation>Constraints for algorithms used for generating signed assertions</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
