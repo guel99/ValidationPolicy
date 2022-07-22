@@ -2,12 +2,7 @@
 <xs:schema targetNamespace="http://uri.etsi.org/19172/v1.1.1#" xmlns:tsl="http://uri.etsi.org/02231/v2#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://uri.etsi.org/19172/v1.1.1#" elementFormDefault="qualified" attributeFormDefault="unqualified">
     <xs:import namespace="http://uri.etsi.org/02231/v2#" schemaLocation="https://uri.etsi.org/02231/v3.1.2/ts_102231v030102_xsd.xsd"/>
     <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
-    <xs:complexType name="AnyType" mixed="true">
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-            <xs:any namespace="##any" processContents="lax"/>
-        </xs:sequence>
-        <xs:anyAttribute namespace="##any"/>
-    </xs:complexType>
+
     <xs:element name="SignaturePolicy" type="SignaturePolicyType"/>
     <xs:complexType name="SignaturePolicyType">
         <xs:sequence>
@@ -51,14 +46,13 @@
         <xs:sequence>
             <xs:element ref="Name" minOccurs="0"/>
             <xs:element ref="TradeName" minOccurs="0"/>
-            <xs:element ref="PostalAddresses"/>
+            <xs:element ref="tsl:PostalAddresses"/>
             <xs:element ref="ElectronicAddresses"/>
             <xs:element ref="ContactPersons" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
     <xs:element name="Name" type="tsl:InternationalNamesType"/>
     <xs:element name="TradeName" type="tsl:InternationalNamesType"/>
-    <xs:element name="PostalAddresses" type="tsl:PostalAddressListType"/>
     <xs:element name="ElectronicAddresses" type="tsl:ElectronicAddressType"/>
     <xs:element name="ContactPersons" type="ContactPersonsListType"/>
     <xs:complexType name="ContactPersonsListType">
@@ -82,7 +76,7 @@
         <xs:sequence>
             <xs:element name="DateOfIssue" type="xs:dateTime"/>
             <xs:element name="SigningPeriod" type="TimePeriodType" minOccurs="0"/>
-            <xs:element name="Other" type="AnyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Other" type="tsl:AnyType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="TimePeriodType">
@@ -114,7 +108,7 @@
             <xs:element ref="OtherRule" />
         </xs:choice>
     </xs:group>
-    <xs:element name="OtherRule" type="AnyType"/>
+    <xs:element name="OtherRule" type="tsl:AnyType"/>
     <xs:complexType name="PolicyRuleType">
         <xs:choice>
             <xs:element ref="CommitmentRules"/>
@@ -481,7 +475,7 @@
     <xs:complexType name="AttributeConstraintsType">
         <xs:sequence>
             <xs:element name="AttributeIdMustBePresent" type="xs:anyURI"/>
-            <xs:element name="AttributeValueConstraint" type="AnyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="AttributeValueConstraint" type="tsl:AnyType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
     <xs:element name="QualifyingPropertiesRules" type="QualifyingPropertiesRulesType"/>
@@ -542,7 +536,7 @@
             <xs:element name="ExpirationDate" type="xs:dateTime" />
             <xs:element name="MinKeyLength" type="xs:integer" minOccurs="0"/>
             <xs:element name="MinHashLength" type="xs:integer" minOccurs="0"/>
-            <xs:element name="Other" type="AnyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Other" type="tsl:AnyType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
