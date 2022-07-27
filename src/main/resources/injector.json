@@ -22,9 +22,31 @@
       },
       "AuthorityDetails": {
         "Name": {
-          "Name":[
-            "Devise Futures IT Solutions"
+          "Name": {
+            "enterpriseName": "Devise Futures IT Solutions"
+          }
+        },
+        "TradeName": {
+          "Name": {
+            "tradeName": "Devise Futures IT Solutions Trade name"
+          }
+        },
+        "PostalAddresses": {
+          "streetAddress": "Devise Futures Address",
+          "locality": "Avenida Braga",
+          "stateOrProvince": "Braga",
+          "postalCode": "3721-212",
+          "countryName": "Portugal",
+          "lang": "PT"
+        },
+        "ElectronicAddresses": {
+          "uri": [
+            "miguel.oliveira@devisefutures.com"
           ]
+        },
+        "ContactPersons": {
+          "ContactPerson":
+
         }
       },
       "OtherDetails": {
