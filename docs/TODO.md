@@ -9,7 +9,7 @@
 ## Table of contents
 
 1. Implementar *mapping* de um objeto da classe ***SignaturePolicyType*** (*eIDAS signature policy schema*) para ***ConstraintsParameters*** (*DSS validation policy schema*)
-    > Terminar especificação dos **ASiC-E *containers***
+    > Pensar qual das restrições de validação faria sentido deixar editáveis pelo utilizador
 
     > Breve análise às implementações de AdES em falta: **XAdES**, **JAdES** e **PAdES**
 

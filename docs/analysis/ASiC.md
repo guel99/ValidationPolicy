@@ -141,3 +141,7 @@ O ".ZIP file comment" poderá estar presente e poderá ter o valor "mimetype=app
 
 1. O ficheiro "***mimetype***" poderá estar presente
 2. Um ou mais "\*signatures\.xml*" deverão estar presentes na *folder* META-INF, cada um deles contendo uma ou mais assinaturas XAdES (baseline or extended), onde os ficheiros assinados por cada uma das assinaturas deverão ser especificados de forma direta, pela própria assinatura, com o conjunto de elementos ````ds:Reference````, ou indiretamente, usando um objeto ````ds:Manifest```` apontado por um ````ds:Reference````.
+3. Um ou mais ficheiros ASiCEvidenceRecordManifest, onde cada um deles deverá conter um elemento ````ASiCManifest````.
+4. Outros ficheiros específicos de aplicações, tais como:
+    * "***container.xml***"
+    * "***manifest.xml***"
