@@ -18,7 +18,10 @@ Este documento procura dar uma perspetiva do modo como o tema "Políticas de val
     - [4.1 Container Constraints](#41-container-constraints)
       - [4.1.1 ***AcceptableContainerTypes***](#411-acceptablecontainertypes)
       - [4.1.2 ***AcceptableMimeTypeFileContent***](#412-acceptablemimetypefilecontent)
-      - [4.1.3 **Elementos não abrangidos**](#413-elementos-não-abrangidos)
+      - [4.1.3 ***AllFilesSigned***](#413-allfilessigned)
+      - [4.1.4 **Elementos não editáveis**](#414-elementos-não-editáveis)
+    - [4.2 Signature Constraints](#42-signature-constraints)
+      - [4.2.1 ***AcceptablePolicies*** (*esclarecer o modo como se identifica as políticas aceitáveis antes de mais*)](#421-acceptablepolicies-esclarecer-o-modo-como-se-identifica-as-políticas-aceitáveis-antes-de-mais)
 
 
 ## 2. Enquadramento
@@ -44,6 +47,8 @@ O objetivo por trás da conceção de uma aplicação final com a funcionalidade
 
 Assim sendo, iremos abordar aqueles elementos que faziam sentido serem editáveis por parte de uma entidade que pretendesse utilizar tal funcionalidade. Para tal teremos por base sempre o schema da política DSS, a qual poderá ser diretamente aplicada no processo de validação, visto que também ele é implementado pelo DSS. A geração da política de assinatura ETSI e posterior resumo para política DSS será tratado mais à frente neste mesmo documento.
 
+Serão mencionadas, em cada uma das seguintes subsecções, os elementos que fazem sentido poder ser editáveis pelos utilizadores. Em cada um deles será especificado o que acontecerá caso o criador da política não especifique a condição, caso esse doravante designado por ***default***.
+
 ### 4.1 Container Constraints
 
 O primeiro tipo de regras definido por uma política DSS são as ***container constrains***, ou seja aquelas que têm a ver com o processamento da validação de ASiC Containers.
@@ -52,12 +57,35 @@ O primeiro tipo de regras definido por uma política DSS são as ***container co
 
 Apesar de a validação do formato da assinatura não integrar os building blocks para uma política de validação definidos no **ETSI EN 310 102-1**, faz sentido a entidade criadora de uma política definir os tipos de ASiC containers que aceita, de entre os tipos conhecidos que são ASiC-S e ASiC-E.
 
+***Default:*** Serão aceites quais tipos de container: **ASiC-S** e **ASiC-E**.
+
 #### 4.1.2 ***AcceptableMimeTypeFileContent***
 
-Quanto a este tópico, faz sentido, para além dos mimetypes que definem o media type dos containers, **application/vnd.etsi.asic-s+zip** e **application/vnd.etsi.asic-e+zip**, faz sentido a entidade poder adicionar qualquer outro mimetype que caracterize o conteúdos do(s) objeto(s) a ser(em) assinado(s), tal como se encontra especificado no **ETSI EN 319 162-1 V1.1.1**. Deste modo, serão sempre, em qualquer política gerada, incluidos os mimetype supramencionados, aos quais serão adicionados aqueles apresentados pelo utilizador após passar num processo de validação (verificar se mimetype é válido - VER SE FAZ SENTIDO).
+Quanto a este tópico, faz sentido, para além dos mimetypes que definem o media type dos containers, **application/vnd.etsi.asic-s+zip** e **application/vnd.etsi.asic-e+zip**, a entidade poder adicionar qualquer outro mimetype que caracterize o conteúdos do(s) objeto(s) a ser(em) assinado(s), tal como se encontra especificado no **ETSI EN 319 162-1 V1.1.1**. Deste modo, serão sempre, em qualquer política gerada, incluidos os mimetype supramencionados, aos quais serão adicionados aqueles apresentados pelo utilizador após passar num processo de validação (verificar se mimetype é válido - VER SE FAZ SENTIDO).
 
-#### 4.1.3 **Elementos não abrangidos**
+***Default:*** Serão apenas considerados os media types já mencionados nesta mesma secção.
 
-* ***MimeTypeFilePresent*** - Por uma questão de simplicidade, o mimetype **não será obrigatório**, sendo que, sempre que um determinado container a validar contiver um ficheiro mimetype, o seu conteúdo deverá sempre ser um daqueles mimetypes mencionados [nesta secção](#412-acceptablemimetypefilecontent), ou então daqueles especificados pelo próprio utilizador como sendo.***AcceptableMimeTypes***. Assim sendo o seu Level será apenas ***Inform***, de modo a que um utilizador seja avisado sempre que o mimetype não esteja presente.
+#### 4.1.3 ***AllFilesSigned***
+
+Faz sentido o utilizador, para uma determinada política pretender que todos os ficheiros sejam cobertos por alguma assinatura, e noutros casos não, pelo que este valor poderá ser editável. Para além do mais, o utilizador poderá escolher entre FAIL e WARN, no caso de a condição não ser respeitada.
+
+***Default:*** Será retornado um FAIL, no caso de os ficheiros presentes no container não estarem cobertos por uma assinatura.
+
+#### 4.1.4 **Elementos não editáveis**
+
+* ***MimeTypeFilePresent*** - Por uma questão de simplicidade, o mimetype **não será obrigatório**, sendo que, sempre que um determinado container a validar contiver um ficheiro mimetype, o seu conteúdo deverá sempre ser um daqueles mimetypes mencionados [nesta secção](#412-acceptablemimetypefilecontent), ou então daqueles especificados pelo próprio utilizador como sendo ***AcceptableMimeTypes***. Assim sendo o seu Level será apenas ***Inform***, de modo a que um utilizador seja avisado sempre que o mimetype não esteja presente.
 * ***ZipCommentPresent*** - o comentário ZIP acaba por ser um pouco secundário, pelo que não será devido a este que qualquer processo de validação acabe num resultado negativo, não fazendo então parte dos elementos editávais pelo utilizador. Para tal será retornado um ***Inform*** sempre que o comentário não esteja presente no container.
 * ***AcceptableZipComment*** - por ter uma relação direta com o anterior. Os comentários mais expectáveis serão sempre "***mimetype=application/vnd.etsi.asic-s+zip***" ou "***mimetype=application/vnd.etsi.asic-e+zip***", ou um daqueles mimetypes introduzidos pelo utilizador na mesma política, sempre que tal não se verificar, o utilizador recerá um level ***Inform***. Caso não acontecerá absolutamente nada.
+* ***ManifestFilePresent*** - será sempre verificada, para qualquer tipo de container:
+  * **ASiC-S** - Não deverá constar nenhum ficheiro do tipo
+  * **ASiC-E** - Será obrigatório pelo menos um ficheiro do tipo
+*  ***SignedFilesPresent*** - esta condição terá sempre que se verificar. Por outras palavras, qualquer que seja o tipo do container a validar:
+   *  **ASiC-S** - Verifica se um e apenas um ficheiro assinado se encontra ao nível da root do container
+   *  **ASiC-E** - verifica se pelo menos um ficheiro assinado se encontra ao nível da root do container
+
+### 4.2 Signature Constraints
+
+Estas condições etão relacionadas com a validação da própria assinatura, incluindo os atributos assinados e não assinados, os elementos abrangidos pela própria assinatura, certificados, entre outros.
+
+#### 4.2.1 ***AcceptablePolicies*** (*esclarecer o modo como se identifica as políticas aceitáveis antes de mais*)
+
