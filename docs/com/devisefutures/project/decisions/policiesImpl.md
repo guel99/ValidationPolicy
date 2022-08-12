@@ -15,13 +15,20 @@ Este documento procura dar uma perspetiva do modo como o tema "Políticas de val
   - [2. Enquadramento](#2-enquadramento)
   - [3. Geração de um ficheiro de política de validação](#3-geração-de-um-ficheiro-de-política-de-validação)
   - [4. Elementos editáveis pelo utilizador](#4-elementos-editáveis-pelo-utilizador)
-    - [4.1 Container Constraints](#41-container-constraints)
+    - [4.1 ContainerConstraints](#41-containerconstraints)
       - [4.1.1 ***AcceptableContainerTypes***](#411-acceptablecontainertypes)
       - [4.1.2 ***AcceptableMimeTypeFileContent***](#412-acceptablemimetypefilecontent)
       - [4.1.3 ***AllFilesSigned***](#413-allfilessigned)
       - [4.1.4 **Elementos não editáveis**](#414-elementos-não-editáveis)
-    - [4.2 Signature Constraints](#42-signature-constraints)
+    - [4.2 SignatureConstraints](#42-signatureconstraints)
       - [4.2.1 ***AcceptablePolicies*** (*esclarecer o modo como se identifica as políticas aceitáveis antes de mais*)](#421-acceptablepolicies-esclarecer-o-modo-como-se-identifica-as-políticas-aceitáveis-antes-de-mais)
+      - [4.2.2 ***AcceptableFormats***](#422-acceptableformats)
+      - [4.2.3 ***Full scope***](#423-full-scope)
+      - [4.2.4 ***Basic Signature Constraints***](#424-basic-signature-constraints)
+      - [4.2.5 ***SignedAttributesConstraints*** e ***UnsignedAttributesConstraints***](#425-signedattributesconstraints-e-unsignedattributesconstraints)
+    - [4.3 CounterSignatureConstraints](#43-countersignatureconstraints)
+    - [4.4 Time-Stamp](#44-time-stamp)
+      - [4.1.1 ***TimestampDelay***](#411-timestampdelay)
 
 
 ## 2. Enquadramento
@@ -49,9 +56,11 @@ Assim sendo, iremos abordar aqueles elementos que faziam sentido serem editávei
 
 Serão mencionadas, em cada uma das seguintes subsecções, os elementos que fazem sentido poder ser editáveis pelos utilizadores. Em cada um deles será especificado o que acontecerá caso o criador da política não especifique a condição, caso esse doravante designado por ***default***.
 
-### 4.1 Container Constraints
+### 4.1 ContainerConstraints
 
 O primeiro tipo de regras definido por uma política DSS são as ***container constrains***, ou seja aquelas que têm a ver com o processamento da validação de ASiC Containers.
+
+Este elemento no documento de política de validação é do tipo ***ContainerConstraints***.
 
 #### 4.1.1 ***AcceptableContainerTypes***
 
@@ -83,9 +92,57 @@ Faz sentido o utilizador, para uma determinada política pretender que todos os 
    *  **ASiC-S** - Verifica se um e apenas um ficheiro assinado se encontra ao nível da root do container
    *  **ASiC-E** - verifica se pelo menos um ficheiro assinado se encontra ao nível da root do container
 
-### 4.2 Signature Constraints
+### 4.2 SignatureConstraints
+
+Elemento do tipo ***SignatureConstraints***.
 
 Estas condições etão relacionadas com a validação da própria assinatura, incluindo os atributos assinados e não assinados, os elementos abrangidos pela própria assinatura, certificados, entre outros.
 
 #### 4.2.1 ***AcceptablePolicies*** (*esclarecer o modo como se identifica as políticas aceitáveis antes de mais*)
+
+#### 4.2.2 ***AcceptableFormats***
+
+O utilizador será capaz de selecionar os formatos desejados para a assinatura a validar. Tais formatos poderão ser aqueles standardizados por parte do ETSI, por exemplo:
+   * XAdES-BASELINE-B
+   * PAdES-BASELINE-LT
+   * ...
+
+***Default:*** Serão aceites quaisquer formatos, desde que de acordo com os standards definidos pelo **ETSI** (**ETSI EN 310 162-1**, **ETSI EN 310 162-2**, **ETSI EN 310 122-1**, **ETSI EN 310 122-2**, **ETSI EN 310 182-1**, **ETSI EN 310 142-1**, **ETSI EN 310 142-2**, **ETSI EN 310 132-1** e **ETSI EN 310 132-2**).
+
+#### 4.2.3 ***Full scope***
+
+Será possível indicar se é intenção do utilizador considerar apenas válida uma assinatura se o próprio valor da assinatura cobrir todo o documento.
+O utilizador poderá ainda especificar se a validação deve falhar (***FAIL***), caso tal aconteça ou se apenas pretende devolver como resultado um ***WARN***.
+
+***Default:*** A função estará desabilitada, ou seja, a condição não se aplica.
+
+#### 4.2.4 ***Basic Signature Constraints***
+
+As *basic signature constraints* são um sub-elemento das ***SignatureConstraints***, sendo constituidas por regras para qualquer tipo de dados assinados, sejam eles uma assinatura, um time-stamp, ou até mesmo revocation data.
+
+Tendo em conta que são um sub-tipo de restrições que estão incluidos em mais do que apenas uma categoria de restrições, serão abordadas na secção (FIIIIIIXMEEEEEEE).
+
+#### 4.2.5 ***SignedAttributesConstraints*** e ***UnsignedAttributesConstraints***
+
+Os ***signed attributes***, tal como o próprio nome indica, aplica regras relacionadas com os **atributos assinados** de uma **assinatura**, ao passo que os ***unsigned attributes*** se aplicam aos **atributos não assinados**.
+
+À semelhança do que aconteceu na secção [4.2.4](#424-basic-signature-constraints), serão abordados numa secção à parte.
+
+### 4.3 CounterSignatureConstraints
+
+Elemento de tipo igual ao mencionado para as ***SignatureConstraints*** na secção [4.2](#42-signature-constraints).
+
+No entanto, neste caso em particular, ao invés das restrições doravante mencionadas se destinarem à validação da própria assinatura, serão aplicadas às ***countersignatures***, atributo guardado pela própria assinatura.
+
+Assim sendo, as possíveis restrições aplicáveis às countersignatures são precisamente as mesmas que aquelas que são aplicáveis à validação da assinatura, pelo que a opção de escolha por parte do utilizador será exatamente a mesma que foi especificada ao longo da secção [4.2](#42-signature-constraints).
+
+### 4.4 Time-Stamp
+
+É um elemento, no documento de política de validação, do tipo ***TimeStampConstraints***. Possibilita a especificação de regras destinadas à validação de timestamps.
+
+#### 4.1.1 ***TimestampDelay***
+
+Permite especificar a diferença temporal máxima entre o *best-signature-time* e o *claimed signing time*. Este valor poderá ser editável pelo utilizador.
+
+
 
