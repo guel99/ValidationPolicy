@@ -29,6 +29,12 @@ Este documento procura dar uma perspetiva do modo como o tema "Políticas de val
     - [4.3 CounterSignatureConstraints](#43-countersignatureconstraints)
     - [4.4 Time-Stamp](#44-time-stamp)
       - [4.1.1 ***TimestampDelay***](#411-timestampdelay)
+      - [4.1.2 ***BasicSignatureConstraints***](#412-basicsignatureconstraints)
+      - [4.1.3 ***TSAGeneralNamePresent***](#413-tsageneralnamepresent)
+    - [4.5 *Revocation*](#45-revocation)
+      - [4.5.1 ***OCSPCertHashPresent*** e ***OCSPCertHashMatch***](#451-ocspcerthashpresent-e-ocspcerthashmatch)
+      - [4.5.2 ***SelfIssuedOCSP***](#452-selfissuedocsp)
+      - [4.5.3 ***BasicSignatureConstraints***](#453-basicsignatureconstraints)
 
 
 ## 2. Enquadramento
@@ -142,7 +148,37 @@ Assim sendo, as possíveis restrições aplicáveis às countersignatures são p
 
 #### 4.1.1 ***TimestampDelay***
 
-Permite especificar a diferença temporal máxima entre o *best-signature-time* e o *claimed signing time*. Este valor poderá ser editável pelo utilizador.
+Permite especificar a diferença temporal máxima entre o *best-signature-time* e o *claimed signing time*. Este valor poderá ser editável pelo utilizador. Faz sentido que uma determinada entidade apenas considere válida uma assinatura com time-stamp, no caso de o *claimed signing type* da assinatura ser anterior ao *best-signature-time* num intervalo de tempo máximo, definido pela própria entidade.
+
+***Default:*** Parâmetro desativado. A condição não é testada.
+
+#### 4.1.2 ***BasicSignatureConstraints***
+
+Condições aplicáveis à assinatura existente no próprio token. Estas restrições serão tidas em conta numa secção à parte.
+
+#### 4.1.3 ***TSAGeneralNamePresent***
+
+A entidade que gera a política será capaz de garantir que uma assinatura apenas é válida caso o nome da *time stamp authority* conste no output da validação do respetivo token, e inválida caso contrário. O mesmo acontecerá no caso da ***TSAGeneralNameContentMatch*** e da ***TSAGeneralNameOrderMatch***
+
+***Default:*** A condição não será testada.
+
+### 4.5 *Revocation*
+
+Grupo de regras aplicadas aos **dados de revogação**.
+
+#### 4.5.1 ***OCSPCertHashPresent*** e ***OCSPCertHashMatch***
+
+O utilizador poderá selecionar opção que verifica se a extensão OCSP *"certHash"* possui um valor atribuido e mais ainda se corresponde ao certificado para o qual foi realizado o request.
+
+#### 4.5.2 ***SelfIssuedOCSP***
+
+Permite verificar se um certificado testado faz parte do trust certificate path do OCSP responder.
+
+***Default:*** Condição não será verificada
+
+#### 4.5.3 ***BasicSignatureConstraints***
+
+Grupo de restrições aplicadas à assinatura da OCSP response. Tema abordado numa secção à parte.
 
 
 
