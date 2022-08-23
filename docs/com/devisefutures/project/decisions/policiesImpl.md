@@ -35,6 +35,7 @@ Este documento procura dar uma perspetiva do modo como o tema "Políticas de val
       - [4.5.1 ***OCSPCertHashPresent*** e ***OCSPCertHashMatch***](#451-ocspcerthashpresent-e-ocspcerthashmatch)
       - [4.5.2 ***SelfIssuedOCSP***](#452-selfissuedocsp)
       - [4.5.3 ***BasicSignatureConstraints***](#453-basicsignatureconstraints)
+    - [4.6 *CryptographicConstraints*](#46-cryptographicconstraints)
 
 
 ## 2. Enquadramento
@@ -180,5 +181,7 @@ Permite verificar se um certificado testado faz parte do trust certificate path 
 
 Grupo de restrições aplicadas à assinatura da OCSP response. Tema abordado numa secção à parte.
 
+### 4.6 *CryptographicConstraints*
 
+As cryptographic constraints, por questões de simplicidade, pelo menos numa primeira fase, não serão levadas em consideração, sendo usadas sempre aquelas presentes no ficheiro de política usado pelo DSS em caso de omissão.
 
